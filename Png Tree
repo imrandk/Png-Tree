@@ -1,41 +1,25 @@
 (function() {
     'use strict';
 
-    // ফাংশন যা এলিমেন্টটি খুঁজে বের করবে এবং ক্লিক করবে
     function selectItem() {
-        const selectItem = document.querySelector('li.ivu-select-item:nth-child(1)');
-        if (selectItem) {
-            selectItem.click();
-        }
+        const item = document.querySelector('li.ivu-select-item:nth-child(1)');
+        if (item) item.click();
     }
 
-    // ফাংশন যা ইনপুট বক্স থেকে লেখা কপি করবে এবং অন্য ইনপুট বক্সে বসাবে
     function copyAndPasteText() {
-        // প্রথম ইনপুট বক্স থেকে লেখা কপি করুন
-        const sourceInput = document.querySelector('input.ivu-input:nth-child(3)');
-        const targetInput = document.querySelector('.work-data:nth-child(3) .ivu-input');
-        const mageSpaceInput = document.querySelector('.work-data:nth-child(4) .ivu-input'); // ধরে নিচ্ছি এটি তৃতীয় বক্স
+        const source = document.querySelector('input.ivu-input:nth-child(3)');
+        const target = document.querySelector('.work-data:nth-child(3) .ivu-input');
+        const mageSpace = document.querySelector('.work-data:nth-child(4) .ivu-input');
 
-        if (sourceInput && targetInput) {
-            const textToCopy = sourceInput.value; // প্রথম ইনপুট বক্সের লেখা কপি করুন
-            targetInput.value = textToCopy; // দ্বিতীয় ইনপুট বক্সে লেখা বসান
-
-            // তৃতীয় ইনপুট বক্সে "https://www.mage.space" লেখাটি বসান
-            if (mageSpaceInput) {
-                mageSpaceInput.value = 'https://www.mage.space';
-            }
+        if (source && target) {
+            target.value = source.value;
+            if (mageSpace) mageSpace.value = 'https://www.mage.space';
         }
     }
 
-    // প্রথমবার এলিমেন্টটি খুঁজে বের করুন
     selectItem();
+    setInterval(selectItem, 2000);
 
-    // এখন প্রতি 5 সেকেন্ড পরপর এলিমেন্টটি খুঁজে বের করুন এবং ক্লিক করুন
-    setInterval(selectItem, 5000); // 5000ms = 5 সেকেন্ড
-
-    // ইনপুট বক্সের লেখা কপি করার ফাংশন চালান
     copyAndPasteText();
-
-    // প্রতি 5 সেকেন্ড পরপর ইনপুট বক্সের লেখা কপি করার ফাংশন চালান
-    setInterval(copyAndPasteText, 5000); // 5000ms = 5 সেকেন্ড
+    setInterval(copyAndPasteText, 2000);
 })();

@@ -1,0 +1,113 @@
+(function() {
+    'use strict';
+
+    // Constants for delays and intervals
+    const DELAY = 100; // 0.1 seconds
+    const INTERVAL = 1000; // 1 second
+
+    // Helper function to simulate multiple events
+    function simulateEvents(el, evs) {
+        evs.forEach(e => el.dispatchEvent(new Event(e, { bubbles: true, cancelable: true })));
+    }
+
+    // Helper function to get the target input for automateClicks
+    function getTargetInput() {
+        const inputs = document.querySelectorAll('input.ivu-select-input');
+        return inputs[inputs.length - 1] || null;
+    }
+
+    // Function to automate clicks for keyword recommendation
+    function automateClicks() {
+        const inputElement = getTargetInput();
+        if (!inputElement) return;
+        simulateEvents(inputElement, ['mousedown', 'mouseup', 'click', 'focus', 'blur']);
+        setTimeout(() => {
+            const addAllButton = document.querySelector('.ivu-drawer-body > .recommend-keyword-title2 > .recommend-keyword-add-all');
+            if (addAllButton) simulateEvents(addAllButton, ['mousedown', 'mouseup', 'click']);
+            setTimeout(() => {
+                const closeButton = document.querySelector('.ivu-drawer-content-no-mask .ivu-drawer-close .ivu-icon');
+                if (closeButton) simulateEvents(closeButton, ['mousedown', 'mouseup', 'click']);
+            }, DELAY);
+        }, INTERVAL);
+    }
+
+    // Function to trigger events
+    function triggerEvent(element, eventName) {
+        const event = new Event(eventName, { bubbles: true });
+        element.dispatchEvent(event);
+    }
+
+    // Function to click a button by selector
+    function clickButton(selector, callback) {
+        const intervalId = setInterval(() => {
+            const button = document.querySelector(selector);
+            if (button) {
+                clearInterval(intervalId);
+                button.click();
+                if (callback) callback();
+            }
+        }, INTERVAL);
+    }
+
+    // Function to start the process
+    function startProcess() {
+        clickButton('.single-work:nth-child(1) img', () => {
+            setTimeout(() => {
+                selectItem();
+                fillBoxes();
+            }, DELAY);
+        });
+    }
+
+    // Function to select the first item in the dropdown
+    function selectItem() {
+        clickButton('li.ivu-select-item:nth-child(1)', () => {
+            // Do nothing after selecting the item
+        });
+    }
+
+    // Function to fill the boxes
+    function fillBoxes() {
+        const checkElementsInterval = setInterval(() => {
+            const source = document.querySelector('input.ivu-input:nth-child(3)');
+            const target = document.querySelector('.work-data:nth-child(3) .ivu-input');
+            const mageSpace = document.querySelector('.work-data:nth-child(4) .ivu-input');
+            if (source && target) {
+                clearInterval(checkElementsInterval);
+                target.value = source.value;
+                triggerEvent(target, 'input');
+                triggerEvent(target, 'change');
+                if (mageSpace) {
+                    mageSpace.value = 'https://www.mage.space';
+                    triggerEvent(mageSpace, 'input');
+                    triggerEvent(mageSpace, 'change');
+                }
+                automateClicks();
+                setTimeout(() => {
+                    clickSubmitButton();
+                }, DELAY);
+            }
+        }, DELAY);
+    }
+
+    // Function to click the submit button
+    function clickSubmitButton() {
+        clickButton('span#submit', () => {
+            setTimeout(() => {
+                clickDefaultButton();
+            }, DELAY);
+        });
+    }
+
+    // Function to click the default button and restart the script
+    function clickDefaultButton() {
+        clickButton('span.ivu-btn-default:nth-child(1)', () => {
+            setTimeout(() => {
+                startProcess(); // Restart the process
+            }, DELAY);
+        });
+    }
+
+    // Start the process initially
+    startProcess();
+})();
